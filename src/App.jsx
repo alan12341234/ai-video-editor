@@ -1,19 +1,18 @@
 import React from "react";
-import VideoUploader from "./VideoUploader";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import LandingPage from "./LandingPage";
+import Dashboard from "./Dashboard";
+import Editor from "./Editor";
 
 function App() {
   return (
-    <div
-      style={{
-        margin: 0,
-        padding: 0,
-        boxSizing: "border-box",
-        backgroundColor: "#f9fafb",
-        minHeight: "100vh",
-      }}
-    >
-      <VideoUploader />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/editor" element={<Editor />} />
+      </Routes>
+    </Router>
   );
 }
 

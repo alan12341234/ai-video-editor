@@ -1,22 +1,25 @@
-/* Reset defaults and center everything */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-html, body, #root {
-  height: 100%;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #f9fafb;
+body {
+  @apply bg-gradient-to-br from-slate-50 to-slate-100 text-slate-800;
   font-family: 'Inter', sans-serif;
 }
+html {
+  scroll-behavior: smooth;
+}
+html {
+  scroll-behavior: smooth;
+}
 
-/* Optional: smoother font rendering */
-body {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@keyframes borderGlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-border-glow {
+  background-size: 200% 200%;
+  animation: borderGlow 5s linear infinite;
 }
