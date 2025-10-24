@@ -1,231 +1,249 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useUser } from "@clerk/clerk-react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "react-router-dom";
 
 export default function LandingPage() {
-  const navigate = useNavigate();
-  const { isSignedIn } = useUser();
+  const [isMobile, setIsMobile] = useState(false);
   const [openIndex, setOpenIndex] = useState(null);
 
-  const fadeUp = {
-    hidden: { opacity: 0, y: 40 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-  };
+  // Detect mobile screen
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-[#1a0826] via-[#2a0d45] to-[#3b0f60] text-white overflow-x-hidden scroll-smooth relative">
-      {/* floating background glow (now non-blocking) */}
-      <div className="pointer-events-none -z-10 absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,0,128,0.10),transparent_50%)] animate-[pulse_10s_ease-in-out_infinite]" />
-
-      {/* HEADER */}
-      <header className="w-full flex items-center justify-between px-10 py-6 border-b border-purple-800/30 relative z-10">
-        <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-400 to-purple-500 bg-clip-text text-transparent">
-          Clipify AI
+  // Show “desktop only” message if mobile
+  if (isMobile) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          textAlign: "center",
+          padding: "20px",
+          background: "linear-gradient(135deg, #1e003e, #2e005a)",
+          color: "white",
+          fontFamily: "Inter, sans-serif",
+        }}
+      >
+        <h1 style={{ fontSize: "2rem", marginBottom: "10px" }}>
+          🚀 Clipify AI is Desktop-Optimized
         </h1>
+        <p style={{ fontSize: "1.1rem", opacity: 0.9 }}>
+          For the best experience, please visit on your laptop or desktop
+          computer.
+        </p>
+      </div>
+    );
+  }
 
-        {/* Centered Navigation */}
-        <nav className="absolute left-1/2 -translate-x-1/2 flex gap-10 text-gray-300 text-sm">
-          <a href="#features" className="hover:text-white transition">Features</a>
-          <a href="#pricing" className="hover:text-white transition">Pricing</a>
-          <a href="#roadmap" className="hover:text-white transition">Roadmap</a>
-          <a href="#faq" className="hover:text-white transition">FAQ</a>
+  // Landing page desktop version
+  return (
+    <div
+      style={{
+        background: "linear-gradient(135deg, #1e003e, #2e005a)",
+        color: "white",
+        fontFamily: "Inter, sans-serif",
+        minHeight: "100vh",
+        overflowX: "hidden",
+      }}
+    >
+      {/* Navbar */}
+      <header
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: "25px 60px",
+          borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
+        }}
+      >
+        <h1 style={{ fontSize: "1.8rem", fontWeight: "700" }}>Clipify AI</h1>
+        <nav style={{ display: "flex", alignItems: "center", gap: "30px" }}>
+          <a href="#features" style={{ color: "#ccc", textDecoration: "none" }}>
+            Features
+          </a>
+          <a href="#pricing" style={{ color: "#ccc", textDecoration: "none" }}>
+            Pricing
+          </a>
+          <a href="#faq" style={{ color: "#ccc", textDecoration: "none" }}>
+            FAQ
+          </a>
+          <Link
+            to="/sign-in"
+            style={{
+              color: "#fff",
+              textDecoration: "none",
+              padding: "8px 18px",
+              border: "1px solid #fff",
+              borderRadius: "8px",
+            }}
+          >
+            Log In
+          </Link>
+          <Link
+            to="/sign-up"
+            style={{
+              background: "linear-gradient(90deg, #9b5cff, #d46bff)",
+              color: "white",
+              textDecoration: "none",
+              padding: "8px 18px",
+              borderRadius: "8px",
+              fontWeight: "600",
+            }}
+          >
+            Create Account
+          </Link>
         </nav>
-
-        <div className="flex gap-4">
-          {isSignedIn ? (
-            <button
-              onClick={() => navigate("/dashboard")}
-              className="bg-gradient-to-r from-pink-500 to-purple-500 px-4 py-2 rounded-lg hover:opacity-90 transition"
-            >
-              Dashboard
-            </button>
-          ) : (
-            <>
-              <button
-                onClick={() => navigate("/sign-in")}
-                className="border border-purple-500 px-4 py-2 rounded-lg hover:bg-purple-600/30 transition"
-              >
-                Log In
-              </button>
-              <button
-                onClick={() => navigate("/sign-up")}
-                className="bg-gradient-to-r from-pink-500 to-purple-500 px-4 py-2 rounded-lg hover:opacity-90 transition"
-              >
-                Create Account
-              </button>
-            </>
-          )}
-        </div>
       </header>
 
-      {/* HERO */}
-      <motion.section
-        id="hero"
-        variants={fadeUp}
-        initial="hidden"
-        animate="show"
-        className="text-center mt-24 mb-20 px-4"
+      {/* Hero Section */}
+      <section
+        style={{
+          textAlign: "center",
+          padding: "100px 20px",
+          maxWidth: "900px",
+          margin: "0 auto",
+        }}
       >
-        <h2 className="text-5xl font-extrabold mb-4 leading-tight">
-          Edit. Transcribe. Create.{" "}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-500">
-            Effortlessly.
-          </span>
-        </h2>
-        <p className="text-gray-300 max-w-2xl mx-auto">
-          Upload, edit, trim, and caption videos powered by AI — simplicity meets creativity.
-        </p>
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          onClick={() => navigate("/sign-up")}
-          className="mt-8 bg-gradient-to-r from-pink-500 to-purple-600 px-8 py-3 rounded-xl text-lg font-semibold shadow-lg hover:shadow-pink-500/40 transition-all"
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          style={{ fontSize: "3.2rem", fontWeight: "800", marginBottom: "20px" }}
         >
-          Start Creating
-        </motion.button>
-      </motion.section>
-
-      {/* FEATURES */}
-      <motion.section
-        id="features"
-        variants={fadeUp}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true }}
-        className="text-center py-20 px-6"
-      >
-        <h3 className="text-4xl font-bold mb-12">Powerful AI Features</h3>
-        <div className="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto">
-          {[
-            { icon: "🎬", title: "Trim & Caption", desc: "Upload and auto-generate captions powered by AI.", button: "Start Editing" },
-            { icon: "⚡", title: "AI Reels Generator", desc: "Turn long videos into short viral clips — perfect for social media.", button: "Generate Reels" },
-            { icon: "🎧", title: "Audio → Video", desc: "Upload audio and let AI create matching visuals instantly.", button: "Create Video" },
-            { icon: "💬", title: "Upload & Transcribe", desc: "Instantly transcribe and caption your content with accuracy.", button: "Transcribe Now" },
-          ].map((f, i) => (
-            <motion.div
-              key={i}
-              whileHover={{ scale: 1.05 }}
-              className="bg-[#1a0826]/70 backdrop-blur-xl border border-purple-700/30 rounded-2xl p-8 flex flex-col justify-between shadow-lg hover:shadow-[0_0_20px_rgba(192,38,211,0.4)] transition-all"
-            >
-              <div>
-                <h4 className="text-2xl font-bold mb-3">{f.icon} {f.title}</h4>
-                <p className="text-gray-300 mb-6">{f.desc}</p>
-              </div>
-              <button className="bg-gradient-to-r from-pink-500 to-purple-500 text-white font-semibold px-6 py-2 rounded-lg mt-auto hover:opacity-90 transition">
-                {f.button}
-              </button>
-            </motion.div>
-          ))}
-        </div>
-      </motion.section>
-
-      {/* PRICING */}
-      <motion.section
-        id="pricing"
-        variants={fadeUp}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true }}
-        className="flex flex-col items-center py-24"
-      >
-        <h3 className="text-4xl font-bold mb-4">Simple, Transparent Pricing</h3>
-        <p className="text-gray-300 mb-12">
-          One plan for everything you need.{" "}
-          <span className="text-pink-400 font-semibold animate-pulse">First month completely FREE!</span>
+          Edit. Transcribe. Create. Effortlessly.
+        </motion.h2>
+        <p style={{ fontSize: "1.2rem", color: "#ccc", marginBottom: "40px" }}>
+          Upload, edit, trim, and caption videos powered by AI — simplicity meets
+          creativity.
         </p>
-
-        {/* animated gradient border */}
-        <motion.div
-          className="rounded-2xl p-[2px] bg-gradient-to-r from-pink-500 via-purple-500 to-pink-500"
-          style={{ backgroundSize: "200% 200%" }}
-          animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
-          transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
-        >
-          <div className="bg-gradient-to-br from-[#2a0d45] to-[#1a0826] rounded-2xl px-12 py-16 text-center">
-            <h4 className="text-3xl font-extrabold mb-4">$17.99 / month</h4>
-            <p className="text-gray-300 mb-8">Unlimited uploads, AI captions, trimming, and exports.</p>
-            <button className="bg-white text-purple-700 font-bold px-6 py-3 rounded-full hover:bg-purple-100 transition">
-              Subscribe Now
-            </button>
-          </div>
+        <motion.div whileHover={{ scale: 1.05 }}>
+          <Link
+            to="/editor"
+            style={{
+              background: "linear-gradient(90deg, #9b5cff, #d46bff)",
+              color: "white",
+              padding: "14px 34px",
+              borderRadius: "10px",
+              fontSize: "1.1rem",
+              fontWeight: "600",
+              textDecoration: "none",
+              boxShadow: "0 4px 20px rgba(0,0,0,0.2)",
+            }}
+          >
+            Start Creating
+          </Link>
         </motion.div>
-      </motion.section>
+      </section>
 
-      {/* ROADMAP */}
-      <motion.section
-        id="roadmap"
-        variants={fadeUp}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true }}
-        className="py-24 px-8 bg-[#1a0826]/40 backdrop-blur-lg border-t border-purple-800/30"
-      >
-        <h3 className="text-center text-4xl font-bold mb-16">Roadmap</h3>
-        <div className="max-w-4xl mx-auto space-y-8 relative before:absolute before:left-1/2 before:top-0 before:bottom-0 before:w-[2px] before:bg-purple-700/40">
-          {[
-            { phase: "Now", text: "AI Trimming, Auto Captions, Dashboard, Authentication" },
-            { phase: "Next", text: "Reels Generator, Social Auto Posting, Templates" },
-            { phase: "Soon", text: "AI Voice Dubbing, Text-to-Video, Brand Kits" },
-            { phase: "Future", text: "Full Timeline Editor, Team Collaboration, Export Hub" },
-          ].map((item, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, x: i % 2 === 0 ? -50 : 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-              className={`relative flex items-center ${i % 2 === 0 ? "justify-start" : "justify-end"}`}
-            >
-              <div className="w-[45%] bg-[#2a0d45]/60 border border-purple-600/40 rounded-xl p-6 shadow-lg">
-                <h4 className="text-pink-400 font-semibold text-lg mb-2">{item.phase}</h4>
-                <p className="text-gray-200">{item.text}</p>
-              </div>
-            </motion.div>
-          ))}
+      {/* Features Section */}
+      <section id="features" style={{ padding: "100px 20px", textAlign: "center" }}>
+        <h3 style={{ fontSize: "2rem", fontWeight: "700", marginBottom: "60px" }}>
+          Powerful AI Features
+        </h3>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: "30px",
+            maxWidth: "1000px",
+            margin: "0 auto",
+          }}
+        >
+          <FeatureCard
+            title="Trim & Caption"
+            desc="Upload and auto-generate captions powered by AI."
+            color="#a67eff"
+          />
+          <FeatureCard
+            title="⚡ AI Reels Generator"
+            desc="Turn long videos into short viral clips — perfect for social media."
+            color="#ff6bcd"
+          />
+          <FeatureCard
+            title="🎧 Audio ➜ Video"
+            desc="Upload audio and let AI create matching visuals instantly."
+            color="#a3ffce"
+          />
         </div>
-      </motion.section>
+      </section>
 
-      {/* FAQ */}
-      <motion.section
-        id="faq"
-        variants={fadeUp}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true }}
-        className="py-24 px-6 text-center"
+      {/* FAQ Section */}
+      <section id="faq" style={{ padding: "100px 20px", maxWidth: "900px", margin: "0 auto" }}>
+        <h3 style={{ fontSize: "2rem", fontWeight: "700", textAlign: "center", marginBottom: "40px" }}>
+          Frequently Asked Questions
+        </h3>
+
+        {faqData.map((item, i) => (
+          <FAQRow
+            key={i}
+            q={item.q}
+            a={item.a}
+            i={i}
+            openIndex={openIndex}
+            setOpenIndex={setOpenIndex}
+          />
+        ))}
+      </section>
+
+      {/* Footer */}
+      <footer
+        style={{
+          borderTop: "1px solid rgba(255,255,255,0.1)",
+          textAlign: "center",
+          padding: "30px",
+          fontSize: "0.9rem",
+          color: "#bbb",
+        }}
       >
-        <h3 className="text-4xl font-bold mb-10">Frequently Asked Questions</h3>
-        <div className="max-w-3xl mx-auto space-y-4 text-left">
-          {[
-            { q: "Do I need editing experience?", a: "Not at all. Clipify AI automates editing, captions, and trimming — anyone can use it." },
-            { q: "Is my data private?", a: "Yes. Your videos and transcriptions are stored securely and never shared." },
-            { q: "What’s included in the free month?", a: "Full access to all tools — unlimited uploads and exports for 30 days." },
-            { q: "Can I cancel anytime?", a: "Of course. You can cancel or pause your plan from your dashboard in seconds." },
-          ].map((faq, i) => (
-            <FAQRow key={i} i={i} openIndex={openIndex} setOpenIndex={setOpenIndex} {...faq} />
-          ))}
-        </div>
-      </motion.section>
-
-      {/* FOOTER */}
-      <footer className="py-10 text-center text-gray-400 text-sm border-t border-purple-800/20">
-        © {new Date().getFullYear()} by Clipify AI
+        © {new Date().getFullYear()} Clipify AI — All rights reserved.
       </footer>
     </div>
   );
 }
 
-/* FAQ row component */
+// Feature Card Component
+function FeatureCard({ title, desc, color }) {
+  return (
+    <motion.div
+      whileHover={{ scale: 1.05 }}
+      transition={{ duration: 0.3 }}
+      style={{
+        background: "rgba(255,255,255,0.05)",
+        borderRadius: "15px",
+        padding: "40px 25px",
+        backdropFilter: "blur(10px)",
+        border: "1px solid rgba(255,255,255,0.1)",
+      }}
+    >
+      <h4 style={{ color, fontWeight: "700", marginBottom: "10px" }}>{title}</h4>
+      <p style={{ color: "#ccc" }}>{desc}</p>
+    </motion.div>
+  );
+}
+
+// FAQ Row Component
 function FAQRow({ q, a, i, openIndex, setOpenIndex }) {
   const open = openIndex === i;
+
   return (
     <div
-      className="bg-[#2a0d45]/60 border border-purple-700/40 rounded-xl p-5 cursor-pointer select-none"
+      style={{
+        background: "rgba(255,255,255,0.05)",
+        borderRadius: "12px",
+        marginBottom: "15px",
+        padding: "20px 25px",
+        cursor: "pointer",
+      }}
       onClick={() => setOpenIndex(open ? null : i)}
     >
-      <div className="flex justify-between items-center">
-        <h4 className="text-lg font-semibold text-pink-400">{q}</h4>
-        <span>{open ? "−" : "+"}</span>
-      </div>
+      <h4 style={{ margin: 0, color: "#fff", fontSize: "1.1rem" }}>{q}</h4>
       <AnimatePresence>
         {open && (
           <motion.p
@@ -233,7 +251,7 @@ function FAQRow({ q, a, i, openIndex, setOpenIndex }) {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.25 }}
-            className="mt-3 text-gray-300"
+            style={{ marginTop: "10px", color: "#ccc", fontSize: "0.95rem" }}
           >
             {a}
           </motion.p>
@@ -242,3 +260,23 @@ function FAQRow({ q, a, i, openIndex, setOpenIndex }) {
     </div>
   );
 }
+
+// FAQ Data
+const faqData = [
+  {
+    q: "What is Clipify AI?",
+    a: "Clipify AI is an intelligent video editor that helps you trim, caption, and create content automatically using AI.",
+  },
+  {
+    q: "Do I need editing experience?",
+    a: "Not at all. Clipify is designed for creators of all levels — just upload your video, and our AI handles the rest.",
+  },
+  {
+    q: "Can I use it for commercial projects?",
+    a: "Yes! All content you create with Clipify AI can be used commercially with full rights.",
+  },
+  {
+    q: "Does it support multiple languages?",
+    a: "Absolutely — Clipify’s AI transcription and captioning support multiple major languages.",
+  },
+];
